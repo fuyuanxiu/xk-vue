@@ -1,0 +1,145 @@
+ //覆盖一些element-ui样式
+
+ .el-breadcrumb__inner, .el-breadcrumb__inner a{
+  font-weight: 400!important;
+}
+
+ .el-upload {
+   input[type="file"] {
+     display: none !important;
+   }
+ }
+
+ .el-upload__input {
+   display: none;
+ }
+
+ .cell {
+   .el-tag {
+     margin-right: 0px;
+   }
+ }
+
+ .small-padding {
+   .cell {
+     padding-left: 5px;
+     padding-right: 5px;
+   }
+ }
+
+ .fixed-width{
+  .el-button--mini{
+    padding: 7px 10px;
+    width: 60px;
+  }
+ }
+
+ .el-form-item__label{font:13px/28px "Microsoft YaHei",Arial, Tahoma, sans-serif;}
+
+ .el-form-item--small.el-form-item{margin-bottom:14px;}
+
+ .status-col {
+   .cell {
+     padding: 0 10px;
+     text-align: center;
+     .el-tag {
+       margin-right: 0px;
+     }
+   }
+ }
+
+ //暂时性解决dialog 问题 https://github.com/ElemeFE/element/issues/2461
+ .el-dialog {
+   transform: none;
+   left: 0;
+   position: relative;
+   margin: 0 auto;
+ }
+
+ //文章页textarea修改样式
+ .article-textarea {
+   textarea {
+     padding-right: 40px;
+     resize: none;
+     border: none;
+     border-radius: 0px;
+     border-bottom: 1px solid #bfcbd9;
+   }
+ }
+
+ //element ui upload
+ .upload-container {
+   .el-upload {
+     width: 100%;
+     .el-upload-dragger {
+       width: 100%;
+       height: 200px;
+     }
+   }
+ }
+
+//dropdown
+ .el-dropdown-menu{
+  a{
+    display: block
+  }
+}
+
+.el-input__inner{color:#555;}
+
+.el-dialog__footer {
+    padding:0px;
+    height:50px;
+    height:50px;
+    text-align: right;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    background:#ebebeb;
+    text-align:center;
+    max-width:600px;
+    display: table-cell;
+    vertical-align: middle;   
+    width:600px;  
+ }
+.el-dialog__body {
+  padding:25px 15px 15px 25px;
+}
+
+.el-dialog__header {
+    padding: 12px 20px 10px;
+    background:#03b8cc;
+    color:#fff;    
+}
+.el-dialog__title {
+    line-height: 24px;
+    font-size: 16px;
+    color: #fff;
+}
+.el-icon-close:before{color:#333;text-align:center;}
+
+.el-pagination__total{color:#02c1b3;}
+
+.el-pager li.active {
+    color: #fff;
+    cursor: default;
+    background: #02c1b3;
+    border:none;
+}
+.el-pager li {
+    padding: 0 4px;
+    background: #fff;
+    font-size: 12px;
+    min-width: 22px;
+    height: 22px;
+    line-height: 22px;
+    border:1px solid #ccc;
+    border-right:none;
+    -webkit-box-sizing: border-box;   
+    box-sizing: border-box;   
+    }
+    .el-pager li:last-child{
+    border-right:1px solid #ccc;
+    }
+    .el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+    background-color: #e8f1fc;
+    }
