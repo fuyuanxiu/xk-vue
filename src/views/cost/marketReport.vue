@@ -68,7 +68,7 @@ export default {
       },
       pageSizesList: [10, 20, 30, 40, 50, 100],
       totalCount: 0, //数据的总条数
-      dialog: {        
+      dialog: {
         docVisible: false,
         bsFileId: 0
       },
@@ -85,7 +85,7 @@ export default {
     this.getPermit();
   },
   methods: {
-    handleSubmit() {      
+    handleSubmit() {
       this.getData();
     },
     getPermit(){
@@ -132,7 +132,7 @@ export default {
       if (selection.length > 1) {
         selection.shift()
       }
-    },          
+    },
     changePage(page) {
       this.queryParams.page = page;
       this.getData();
@@ -144,7 +144,7 @@ export default {
     //重置
     resetFrom(){
       this.formQuery.keyWord = '';
-    },
+    }
 
   }
 }
