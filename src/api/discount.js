@@ -81,8 +81,21 @@ export function banDiscount(id, bsIsBan) {
   })
 }
 
+export function checkInfo(id) {
+  return request({
+    url: '/discount/check',
+    method: 'post',
+    params: { 'id':id}
+  })
+}
 
-
+export function reverseInfo(id) {
+  return request({
+    url: '/discount/reverse',
+    method: 'post',
+    params: { 'id':id}
+  })
+}
 
 
 

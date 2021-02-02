@@ -36,9 +36,23 @@ export function delFee(id) {
   })
 }
 
+//审核
+export function review(id) {
+  return request({
+    url: '/fee/check',
+    method: 'post',
+    params: { 'id':id }
+  })
+}
 
-
-
+//反审核
+export function reverseReview(id){
+  return request({
+    url: '/fee/reverse',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
 
 

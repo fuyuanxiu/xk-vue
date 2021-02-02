@@ -64,9 +64,9 @@
                     />
                   </el-select>
                 </el-form-item>
-                <el-button type="primary" :disabled="checked" @click="doSave()">保存设置</el-button>
-                <el-button :disabled="formQuery.id&&checked==false?false:true" style="margin-left:10px" type="primary" @click="check">审核</el-button>
-                <el-button v-if="isAdmin" :disabled="formQuery.id&&checked?false:true" type="success" @click="backcheck">反审核</el-button>
+                <el-button :disabled="checked" type="primary" @click="doSave()">保存设置</el-button>
+                <el-button v-if="permit.CHECK" :disabled="formQuery.id&&checked==false?false:true" style="margin-left:10px" type="primary" @click="check">审核</el-button>
+                <el-button v-if="permit.UNCHECK" :disabled="formQuery.id&&checked?false:true" type="success" @click="backcheck">反审核</el-button>
               </el-col>
               <el-col>
                 <el-form-item style="margin-left:40px;">
@@ -406,7 +406,6 @@ export default {
   components: { messagebox },
   data() {
     return {
-      isAdmin: false,
       checked: false,
       labelPosition: 'right',
       activeNames: ['1'],
@@ -520,7 +519,12 @@ export default {
         }
         return statusMap[status]
       },
-      isBomPrice: false// 是否有查看价格权限
+      isBomPrice: false,// 是否有查看价格权限
+      permit:{
+        //权限控制
+        CHECK:false,
+        UNCHECK:false
+      }
     }
   },
   computed: {
@@ -917,12 +921,19 @@ export default {
       })
     },
     // 获取权限
-    getPermit(){
-      var routePath = this.$route.name
-      getPermByRouterCode(routePath).then(res=>{
-        if (res.result){
-          if (res.data == 'admin'){
-            this.isAdmin = true
+    getPermit() {
+      var routePath = this.$route.name;
+      getPermByRouterCode(routePath).then(res => {
+        if (res.result) {
+          if (res.data == 'admin') {
+              this.permit.CHECK= true;
+            this.permit.UNCHECK=true;
+          }else{
+            var list = res.data;
+            for(var i = 0; i < list.length; i++){
+               if(list[i].permCode == "CHECK") this.permit.CHECK = true;
+              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
+            }
           }
         } else {
           this.$message.error(res.msg)

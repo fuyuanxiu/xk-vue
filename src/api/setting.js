@@ -81,7 +81,21 @@ export function updateInvoiceData() {
   })
 }
 
+export function updateCheck(id){
+  return request({
+    url: '/setting/check',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
+export function reverseCheck(id){
+  return request({
+    url: '/setting/reverse',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
 
 

@@ -185,6 +185,7 @@ export default {
           return
         }
         this.dataTable = response.data.rows;
+        console.log(response.data.rows)
         this.totalCount = response.data.total;
       })
     },
@@ -207,8 +208,9 @@ export default {
     },
     /*编辑*/
     viewBox(row, type) {
+      //console.log(row.id);
       //console.log(row);
-      this.$router.push({ path: 'clientBomRate', query: { fileId: row.fileId,type:type } });
+      this.$router.push({ path: 'clientBomRate', query: { fileId: row.fileId,type:type,Id:row.id } });
     },
     toClientBomRate() {
     /*  this.$router.push({path:'clientBomRate',query:{}});*/

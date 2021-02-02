@@ -45,6 +45,8 @@
               <el-form-item>
                 <el-button v-if="permit.SEARCH" size="mini" type="primary"  @click="search">查找</el-button>
               <el-button  size="mini" type="info"  @click="resetFrom()">重置</el-button>
+               <el-button  :disabled="isChecked" v-if="permit.CHECK" style="margin-left:10px" size="mini" type="primary" @click="check">审核</el-button>
+                <el-button :disabled="!isChecked" v-if="permit.UNCHECK" size="mini"  type="success" @click="uncheck">反审核</el-button>
               </el-form-item>       
             </el-col>          
           </el-row>
@@ -80,7 +82,7 @@
         </el-table-column>
         <el-table-column prop="sFeetQty" label="焊脚数量" align="center" width="120">
           <template scope="scope">
-            <el-input
+            <el-input :disabled="isChecked"
             type="number"            
             v-model="scope.row.sFeetQty"              
             @change="updateHandler(scope.row)"             
@@ -90,6 +92,7 @@
         <el-table-column prop="sPoints" label="SMT点数" align="center" width="120">
           <template scope="scope">
            <el-input
+           :disabled="isChecked"
             type="number"  
             step="0.5"          
             v-model="scope.row.sPoints"              
@@ -124,17 +127,19 @@
 </div>
 </template>
 <script>
-import { getTree,updateStmPoints,getlist } from '@/api/smtpoint'
+import { getTree,updateStmPoints,getlist,updateStmCheck,getReviewStatus,reverseStmCheck } from '@/api/smtpoint'
 import {getPermByRouterCode} from '@/api/perm'
 /*import messagebox from "@/components/MessageBox.vue
 */
 export default {
+  inject: ['reload'],
   name: "setSmtPoint",
   components: {
 
   },
   data() {
     return {
+      isChecked:false,
       queryParams:{        
         keyword:'',
         setStatus:0,
@@ -166,7 +171,9 @@ export default {
       permit:{
         //权限控制
         SEARCH:false,
-        EDIT:false
+        EDIT:false,
+        CHECK:false,
+        UNCHECK:false
       },   
       }   
   },
@@ -174,6 +181,7 @@ export default {
    
   },
   created(){
+    this.getStatu()
     this.getTree();   
     this.getPermit();
   },
@@ -200,11 +208,15 @@ export default {
           if(response.data == "admin"){
             this.permit.SEARCH = true;
             this.permit.EDIT = true;
+            this.permit.CHECK= true;
+            this.permit.UNCHECK=true;
           }else{
             var list = response.data;
             for(var i = 0; i < list.length; i++){
               if(list[i].permCode == "SEARCH") this.permit.SEARCH = true;
               if(list[i].permCode == "EDIT") this.permit.EDIT = true;
+               if(list[i].permCode == "CHECK") this.permit.CHECK = true;
+              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
             }
           }
         }else{
@@ -261,7 +273,7 @@ export default {
     //查询
     search() {
       if (this.queryParams.keyword) {
-        his.getData()
+        this.getData()
       } else {
         this.$message.error('请输入要查找的内容！');
       }
@@ -291,6 +303,54 @@ export default {
       this.queryParams.rows=size;   
       this.getData();
     },
+    check() {
+      this.$confirm('是否确认审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+        
+      }).then(() => {
+        updateStmCheck()
+        this.$message({
+          type: 'success',
+          message: '审核成功!'
+        })
+        this.reload()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消审核'
+        })
+      })
+    },
+    getStatu(){
+      getReviewStatus().then(res=>{
+        if(res.result){
+          if(res.data){
+           this.isChecked=true
+          }
+        }
+      })
+    },
+    uncheck() {
+   this.$confirm('是否确认反审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        reverseStmCheck()
+        this.$message({
+          type: 'success',
+          message: '反审核成功!'
+        })
+        this.reload()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消反审核'
+        })
+      })
+    }
    /* filterNode(value, data) {        
         if (!value) return true;
         return data.title.indexOf(value) !== -1;

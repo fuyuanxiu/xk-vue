@@ -22,9 +22,11 @@
         <el-table-column prop="value" label="值" show-overflow-tooltip />
         <el-table-column prop="createdTime" label="创建时间" width="150" show-overflow-tooltip />
         <el-table-column prop="remark" label="备注" show-overflow-tooltip />
-        <el-table-column label="操作" width="140">
+        <el-table-column label="操作" width="180">
           <template slot-scope="scope">
-            <el-button v-if="permit.EDIT" type="primary" size="mini" @click="showEditDialog(scope.row)" icon="el-icon-edit" circle></el-button>
+            <el-button v-if="permit.EDIT" :disabled="scope.row.checked" type="primary" size="mini" @click="showEditDialog(scope.row)" icon="el-icon-edit" circle></el-button>
+            <el-button v-if="permit.CHECK" :disabled="scope.row.checked" type="primary" icon="el-icon-success" size="mini" circle title="审核" @click="check(scope.row.id)"></el-button>
+            <el-button v-if="permit.UNCHECK" :disabled="!scope.row.checked" type="success" icon="el-icon-error" size="mini" circle title="反审核" @click="uncheck(scope.row.id)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -69,7 +71,7 @@
   </div>
 </template>
 <script>
-import { getList,editSetting } from '@/api/setting';
+import { getList,editSetting,updateCheck,reverseCheck } from '@/api/setting';
 import {getPermByRouterCode} from '@/api/perm'
 export default {
   name:'setBomSetting',
@@ -103,7 +105,9 @@ export default {
       permit:{
         //权限控制
         SEARCH:false,
-        EDIT:false
+        EDIT:false,
+        CHECK:false,
+        UNCHECK:false
       },
     }
   },
@@ -122,11 +126,15 @@ export default {
           if(response.data == "admin"){
             this.permit.SEARCH = true;
             this.permit.EDIT = true;
+            this.permit.CHECK= true;
+            this.permit.UNCHECK=true;
           }else{
             var list = response.data;
             for(var i = 0; i < list.length; i++){
               if(list[i].permCode == "SEARCH") this.permit.SEARCH = true;
               if(list[i].permCode == "EDIT") this.permit.EDIT = true;
+               if(list[i].permCode == "CHECK") this.permit.CHECK = true;
+              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
             }
           }
         }else{
@@ -141,6 +149,7 @@ export default {
         if(response.result){
           this.loading = false;
           this.dataTable = response.data;
+          console.log(this.dataTable)
           //this.totalCount = response.data.total;
         }else{
           this.loading = false;
@@ -179,6 +188,49 @@ export default {
       this.queryParams.rows = size;
       this.getData();
     },
+    check(id) {
+      this.$confirm('是否确认审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+        
+      }).then(() => {
+        this.getData()
+        updateCheck(id)
+        this.getData()
+        this.$message({
+          type: 'success',
+          message: '审核成功!'
+        })
+       
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消审核'
+        })
+      })
+    },
+    uncheck(id) {
+   this.$confirm('是否确认反审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.getData()
+        reverseCheck(id)
+         this.getData()
+        this.$message({
+          type: 'success',
+          message: '反审核成功!'
+        })
+        this.getData()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消反审核'
+        })
+      })
+    }
   }
 }
 

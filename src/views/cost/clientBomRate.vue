@@ -61,6 +61,7 @@
                   prop="standardCol"                 
                 >
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.standardCol"
                     placeholder="规格列"
                     style="width:175px"
@@ -78,6 +79,7 @@
                   prop="quantityCol"
                 >
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.quantityCol"
                     placeholder="数量列"
                     style="width:170px"
@@ -92,6 +94,7 @@
                 </el-form-item>
                 <el-form-item label="类别" prop="categoryCol">
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.categoryCol"
                     placeholder="类别列"
                     style="width:178px"
@@ -106,6 +109,7 @@
                 </el-form-item>
                 <el-form-item label="名称">
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.nameCol"
                     placeholder="名称列"
                     style="width:170px"
@@ -122,6 +126,7 @@
               <el-col :span="24" style="margin-bottom:-10px;margin-top:5px;">
                 <el-form-item label="封装">
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.packageCol"
                     placeholder="封装列"
                     style="width:170px"
@@ -136,6 +141,7 @@
                 </el-form-item>
                 <el-form-item label="制造商">
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.makerCol"
                     placeholder="制造商列"
                     style="width:170px"
@@ -150,6 +156,7 @@
                 </el-form-item>
                 <el-form-item label="品牌料号">
                   <el-select 
+                  :disabled="isChecked"
                     v-model="formQuery.brandNumberCol"
                     placeholder="品牌料号"
                     style="width:185px"
@@ -164,6 +171,7 @@
                 </el-form-item>
                 <el-form-item label="位号">
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.placeNumberCol"
                     placeholder="位号"
                     style="width:170px"
@@ -179,13 +187,14 @@
               </el-col>
               <el-col :span="24" style="margin-bottom:-10px;margin-top:5px;">
                 <el-form-item label="选中比例">
-                   <el-input  v-model="formQuery.bomCheck" style="width:170px"></el-input>
+                   <el-input :disabled="isChecked" v-model="formQuery.bomCheck" style="width:170px"></el-input>
                 </el-form-item>
                 <el-form-item label="限制比例">
-                   <el-input  v-model="formQuery.bomLimit" style="width:170px"></el-input>
+                   <el-input :disabled="isChecked" v-model="formQuery.bomLimit" style="width:170px"></el-input>
                 </el-form-item>
-                <el-form-item label="是否筛选客供料" prop="" style="width: 232px" label-width="140px">
+                <el-form-item label="是否筛选客供料"  prop="" style="width: 232px" label-width="140px">
                     <el-switch class="demo"
+                    :disabled="isChecked"
                     v-model="formQuery.isCustomer"
                     :active-value="1"
                     :inactive-value="0"
@@ -197,6 +206,7 @@
                 </el-form-item>   
                 <el-form-item label="是否筛选已匹配的物料" prop="" label-width="140px">
                     <el-switch class="demo"
+                    :disabled="isChecked"
                     v-model="formQuery.isMatchAll"
                     :active-value="1"
                     :inactive-value="0"
@@ -209,11 +219,11 @@
               </el-col>
               <el-col :span="24" style="margin-bottom:-10px;margin-top:5px;">
                 <el-form-item label="匹配数量">
-                   <el-input  v-model="formQuery.bomLimitNum" style="width:170px"></el-input>
+                   <el-input :disabled="isChecked" v-model="formQuery.bomLimitNum" style="width:170px"></el-input>
                 </el-form-item>
                 <el-form-item label="规格的分隔符" label-width="140px">
                   <!-- <el-input v-model="suppChineseName" placeholder="分隔符有'/'，'，'，'；'三种"></el-input> -->
-                  <el-checkbox-group v-model="checkList" >
+                  <el-checkbox-group :disabled="isChecked" v-model="checkList" >
                     <el-checkbox label="1">/</el-checkbox>
                     <el-checkbox label="2">,</el-checkbox>
                     <el-checkbox label="3">;</el-checkbox>
@@ -227,10 +237,11 @@
               </el-col>
               <el-col :span="24" style="margin-bottom:-10px;margin-top:5px;">
                 <el-form-item label="套数">
-                   <el-input  v-model="formQuery.bomNumber" style="width:170px"></el-input>
+                   <el-input :disabled="isChecked" v-model="formQuery.bomNumber" style="width:170px"></el-input>
                 </el-form-item>
                 <el-form-item label="排序方案">
                   <el-select
+                  :disabled="isChecked"
                     v-model="formQuery.bsSortPlan"
                     placeholder="排序方案"
                     style="width:170px"
@@ -244,7 +255,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="K3代码">
-                  <el-input v-model="formQuery.bomK3CodeCol" style="width:170px"></el-input>
+                  <el-input :disabled="isChecked" v-model="formQuery.bomK3CodeCol" style="width:170px"></el-input>
                 </el-form-item>
                 <el-form-item label="K3代码导入人">
                    <el-input v-model="formQuery.personName" :disabled="true" style="width:170px"></el-input>
@@ -279,6 +290,8 @@
                   >
                   </upload-code-component>
                 </el-form-item>
+                 <el-button v-if="permit.CHECK" :disabled="isChecked"  size="mini" type="primary" @click="check(checkId)">审核</el-button>
+                <el-button v-if="permit.UNCHECK" :disabled="!isChecked" size="mini"  type="success" @click="uncheck(checkId)">反审核</el-button>
               </el-col>         
             </el-form>
           </el-col>
@@ -640,12 +653,14 @@
                   >
                   </el-switch> -->
                   <el-button
+                  :disabled="isChecked"
                     type="success"
                     v-if="scope1.row.checkStatus===0"
                     icon="el-icon-check"
                     @click="doCheck('1',scope1.row)"
                   >选中</el-button>
                   <el-button
+                  :disabled="isChecked"
                     type="danger"
                     v-if="scope1.row.checkStatus===1"
                     icon="el-icon-close"
@@ -664,6 +679,7 @@
       >      
         <template slot-scope="scope">
           <el-select
+          :disabled="isChecked"
             v-model="scope.row.mateCategory"
             clearable
             placeholder="请选择物料大类"
@@ -792,8 +808,9 @@
 </template>
 
 <script>
+import {getPermByRouterCode} from '@/api/perm'
 import UploadExcelComponent from "./components/UploadExcel.vue";
-import { getK3Bom,getBomMatch,getBomData,doCheckMateriel,delBom,copyBom } from "@/api/cost";
+import { getK3Bom,getBomMatch,getBomData,doCheckMateriel,delBom,copyBom,updateCheck,getReviewStatus,reverseCheck } from "@/api/cost";
 import {getUserList} from '@/api/user'
 import MessageBoxDelete from "./components/MessageBox.vue";
 import matermodel from "./components/materModel.vue";
@@ -802,11 +819,18 @@ import { getPermission } from '@/api/role';
 import { getMateList,addMate } from '@/api/costMate';
 import UploadCodeComponent from "./components/UploadCode.vue";
 export default {
+  inject: ['reload'],
   name: "clientBomRate",
   components: { UploadExcelComponent,MessageBoxDelete,matermodel,UploadCodeComponent },
   data() {
-    return {     
-      tableData: [],      
+    return {
+      isChecked:false,
+      checkId:null,     
+      tableData: [],
+      permit:{
+        CHECK:false,
+        UNCHECK:false
+      },      
       tableHeader: [],
       dropCol: [],
       labelPosition:'right',
@@ -911,6 +935,12 @@ export default {
     };
   },
   created() {  
+    this.getPermit();
+    if (this.$route.query.Id) {
+      this.checkId=this.$route.query.Id
+      console.log(this.checkId)
+    }
+    this.getStatu(this.checkId)
     //非新增
     if (this.$route.query.fileId) {
       this.getBomDateByFileId(this.$route.query.fileId);
@@ -935,6 +965,25 @@ export default {
      
   },
   methods: {
+    getPermit(){
+      var routerCode = this.$route.name;
+      getPermByRouterCode(routerCode).then(response => {
+        if(response.result){
+          if(response.data == "admin"){
+            this.permit.CHECK= true;
+            this.permit.UNCHECK=true;
+          }else{
+            var list = response.data;
+            for(var i = 0; i < list.length; i++){
+               if(list[i].permCode == "CHECK") this.permit.CHECK = true;
+              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
+            }
+          }
+        }else{
+          this.$message.error(res.msg);
+        }
+      });
+    },
      returnFloat(value){
        if(value == null || value == undefined){
         return "0.000000";
@@ -1441,6 +1490,54 @@ export default {
         }
       });
     },
+     check(id) {
+      this.$confirm('是否确认审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+        
+      }).then(() => {
+        updateCheck(id)
+        this.$message({
+          type: 'success',
+          message: '审核成功!'
+        })
+        this.reload()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消审核'
+        })
+      })
+    },
+    uncheck(id) {
+   this.$confirm('是否确认反审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        reverseCheck(id)
+        this.$message({
+          type: 'success',
+          message: '反审核成功!'
+        })
+     this.reload()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消反审核'
+        })
+      })
+    },
+    getStatu(id){
+      getReviewStatus(id).then(res=>{
+        if(res.result){
+          if(res.data){
+           this.isChecked=true
+          }
+        }
+      })
+    }
   }
 };
 </script>

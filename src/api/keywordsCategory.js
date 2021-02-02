@@ -69,6 +69,21 @@ export function getlistKeywords2(data) {
   })
 }
 
+export function modifyCheck(id) {
+  return request({
+    url: '/keywords2/check',
+    method: 'post',
+    params:{'id' :id}
+  })
+}
+
+export function reverseCheck(id) {
+  return request({
+    url: '/keywords2/reverse',
+    method: 'post',
+    params:{'id' :id}
+  })
+}
 
 
 

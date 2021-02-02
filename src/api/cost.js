@@ -128,7 +128,32 @@ export function getPrdChart(data) {
 }
 
 
+/*审核*/
+export function updateCheck(id) {
+  return request({
+    url: '/customerBom/check',
+    method: 'post',
+    params: {'id':id}
+  })
+}
 
+/*获取审核状态*/
+export function getReviewStatus(id) {
+  return request({
+    url: '/customerBom/getStatus',
+    method: 'get',
+    params: {'id':id}
+  })
+}
+
+/*反审核*/
+export function reverseCheck(id) {
+  return request({
+    url: '/customerBom/reverse',
+    method: 'post',
+    params: {'id':id}
+  })
+}
 
 
 

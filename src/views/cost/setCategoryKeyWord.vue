@@ -60,15 +60,17 @@
         </el-table-column>
         <el-table-column prop="bsRemark" label="备注">
         </el-table-column>      
-        <el-table-column prop="address" label="操作"  width="100">
+        <el-table-column prop="address" label="操作"  width="180">
             <template slot-scope="scope">
-              <el-button v-if="permit.EDIT" type="primary" icon="el-icon-edit" size="mini" circle @click="showEditKeyword(scope.row)"></el-button>
-              <messagebox v-if="permit.DELETE" 
+              <el-button v-if="permit.EDIT" :disabled="scope.row.isChecked?true:false" type="primary" icon="el-icon-edit" size="mini" circle @click="showEditKeyword(scope.row)"></el-button>
+              <messagebox v-if="permit.DELETE" :disabled="scope.row.isChecked?true:false"
                 @callConfirm="delKeywordlist(scope.row)"
                 title="提示"
                 contents="此操作将永久删除该行, 是否继续?"
                 confirmTitle="确认删除"
-                ></messagebox>               
+                ></messagebox> 
+                  <el-button v-if="permit.CHECK" :disabled="scope.row.isChecked?true:false"  type="primary" icon="el-icon-success" size="mini" circle title="审核" @click="check(scope.row.id)"></el-button>
+                <el-button v-if="permit.UNCHECK" :disabled="!scope.row.isChecked?true:false"  type="success" icon="el-icon-error" size="mini" circle title="反审核" @click="uncheck(scope.row.id)"></el-button>              
             </template>
         </el-table-column>
       </el-table>
@@ -183,7 +185,7 @@
 </div>
 </template>
 <script>
-import {getCategorylist,addCategoryKey,editCategoryKey,delCategoryKey,addKeywords2,delKeywords2,getlistKeywords2,editKeywords2} 
+import {getCategorylist,addCategoryKey,editCategoryKey,delCategoryKey,addKeywords2,delKeywords2,getlistKeywords2,editKeywords2,modifyCheck,reverseCheck} 
 from '@/api/keywordsCategory'
 import {getPermByRouterCode} from '@/api/perm'
 import messagebox from "@/components/Dialog/MessageBox.vue";
@@ -266,7 +268,9 @@ export default {
         SEARCH:false,
         ADD:false,
         EDIT:false,
-        DELETE:false
+        DELETE:false,
+        CHECK:false,
+        UNCHECK:false
       },       
       }   
   },
@@ -287,6 +291,9 @@ export default {
             this.permit.ADD = true;
             this.permit.EDIT = true;
             this.permit.DELETE = true;
+            this.permit.CHECK= true;
+            this.permit.UNCHECK=true;
+
           }else{
             var list = response.data;
             for(var i = 0; i < list.length; i++){
@@ -294,6 +301,8 @@ export default {
               if(list[i].permCode == "ADD") this.permit.ADD = true;
               if(list[i].permCode == "EDIT") this.permit.EDIT = true;
               if(list[i].permCode == "DELETE") this.permit.DELETE = true;
+              if(list[i].permCode == "CHECK") this.permit.CHECK = true;
+              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
             }
           }
         }else{
@@ -503,6 +512,49 @@ export default {
       this.queryParams.rows=size;   
       this.getKeywordList();
     }, 
+    check(id) {
+      this.$confirm('是否确认审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.getKeywordList(id)
+        modifyCheck(id)
+        this.getKeywordList(id)
+        console.log(id)
+        this.$message({
+          type: 'success',
+          message: '审核成功!'
+        })
+       
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消审核'
+        })
+      })
+    },
+      uncheck(id) {
+   this.$confirm('是否确认反审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.getKeywordList(id)
+        reverseCheck(id)
+        this.getKeywordList(id)
+        this.$message({
+          type: 'success',
+          message: '反审核成功!'
+        })
+         
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消反审核'
+        })
+      })
+    }
   
   }
 };

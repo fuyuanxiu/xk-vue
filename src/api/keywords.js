@@ -70,7 +70,21 @@ export function getlist(data) {
   })
 }
 
+export function updateCheck(id){
+  return request({
+    url: '/keywords/check',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
+export function reverseCheck(id){
+  return request({
+    url: '/keywords/reverse',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
 
 

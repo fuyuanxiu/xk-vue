@@ -99,7 +99,22 @@ export function getProcessFlow(flowId) {
   })
 }
 
+//审核
+export function review(id){
+  return request({
+    url: '/processFlow/check',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
+export function reverseReview(id){
+  return request({
+    url: '/processFlow/reverse',
+    method: 'post',
+    params:{ 'id':id}
+  })
+}
 
 
 

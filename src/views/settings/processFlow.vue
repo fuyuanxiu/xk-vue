@@ -62,7 +62,7 @@
           </el-table-column>
           <el-table-column prop="bsName" label="工序流名称" width="100" show-overflow-tooltip>
           </el-table-column>
-          <el-table-column prop="bsFlow" label="工序流程" minWidth="150" show-overflow-tooltip>
+          <el-table-column prop="bsFlow" label="工序流程" minWidth="120" show-overflow-tooltip>
             <template scope="scope">
               <span>{{ getFlowName(scope.row.bsFlow) ? getFlowName(scope.row.bsFlow) : "" }}</span>
             </template>
@@ -74,18 +74,20 @@
           </el-table-column>
           <el-table-column prop="bsRemark" label="备注" width="80">
           </el-table-column>
-          <el-table-column label="操作"  width="180" fixed="right">
+          <el-table-column label="操作"  width="265" fixed="right">
             <template slot-scope="scope">
-              <el-button v-if="permit.EDIT" type="primary" icon="el-icon-edit" size="mini" circle @click="showEditData(scope.row)" title="编辑"></el-button>
-              <messagebox v-if="permit.DELETE" 
+              <el-button v-if="permit.EDIT" :disabled="scope.row.checked" type="primary" icon="el-icon-edit" size="mini" circle @click="showEditData(scope.row)" title="编辑"></el-button>
+              <messagebox v-if="permit.DELETE" :disabled="scope.row.checked" 
                 @callConfirm="delData(scope.row)"
                 title="提示"
                 contents="此操作将永久删除该行, 是否继续?"
                 confirmTitle="确认删除"
                 ></messagebox>
-                <el-button v-if="scope.row.bsIsBan==0" type="warning" icon="el-icon-setting" size="mini" circle @click="doBan(1, scope.row)" title="禁用"></el-button>
-                <el-button v-if="scope.row.bsIsBan==1" type="warning" icon="el-icon-setting" size="mini" circle @click="doBan(0, scope.row)" title="解禁"></el-button>
-                <el-button type="success" icon="el-icon-share" size="mini" circle @click="showFlows(scope.row)" title="设置工序流程"></el-button>
+                <el-button v-if="scope.row.bsIsBan==0" :disabled="scope.row.checked" type="warning" icon="el-icon-setting" size="mini" circle @click="doBan(1, scope.row)" title="禁用"></el-button>
+                <el-button v-if="scope.row.bsIsBan==1" :disabled="scope.row.checked" type="warning" icon="el-icon-setting" size="mini" circle @click="doBan(0, scope.row)" title="解禁"></el-button>
+                <el-button type="success" :disabled="scope.row.checked" icon="el-icon-share" size="mini" circle @click="showFlows(scope.row)" title="设置工序流程"></el-button>
+                 <el-button type="primary" v-if="permit.CHECK" :disabled="scope.row.checked" icon="el-icon-success" size="mini" circle title="审核" @click="check(scope.row.id)"></el-button>
+                 <el-button  type="success" v-if="permit.UNCHECK" :disabled="!scope.row.checked" icon="el-icon-error" size="mini" circle title="反审核" @click="uncheck(scope.row.id)"></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -290,7 +292,7 @@
   </div>
 </template>
 <script>
-import {getCategory,addCategory,editCategory,delCategory,getFlow,addFlow,editFlow,delFlow,banFlow,setFlows,getProcessFlow} from '@/api/processFlow';
+import {getCategory,addCategory,editCategory,delCategory,getFlow,addFlow,editFlow,delFlow,banFlow,setFlows,getProcessFlow,review,reverseReview} from '@/api/processFlow';
 import {getProcess,getProcessAll} from '@/api/process';
 import {getPermByRouterCode} from '@/api/perm';
 import messagebox from "@/components/Dialog/MessageBox.vue";
@@ -413,7 +415,9 @@ export default {
         SEARCH:false,
         ADD:false,
         EDIT:false,
-        DELETE:false
+        DELETE:false,
+         CHECK:false,
+        UNCHECK:false
       },
       // 禁用下拉选项
       optionsBan:[{
@@ -458,6 +462,8 @@ export default {
             this.permit.ADD = true;
             this.permit.EDIT = true;
             this.permit.DELETE = true;
+            this.permit.CHECK= true;
+            this.permit.UNCHECK=true;
           }else{
             var list = response.data;
             for(var i = 0; i < list.length; i++){
@@ -465,6 +471,8 @@ export default {
               if(list[i].permCode == "ADD") this.permit.ADD = true;
               if(list[i].permCode == "EDIT") this.permit.EDIT = true;
               if(list[i].permCode == "DELETE") this.permit.DELETE = true;
+              if(list[i].permCode == "CHECK") this.permit.CHECK = true;
+              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
             }
           }
         }else{
@@ -833,7 +841,50 @@ export default {
     },
     handleChange(value, direction, movedKeys) {
         console.log(value, direction, movedKeys);
-      }
+      },
+      check(id) {
+      this.$confirm('是否确认审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+        
+      }).then(() => {
+        this.getData()
+        review(id)
+        this.getData()
+        this.$message({
+          type: 'success',
+          message: '审核成功!'
+        })
+       
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消审核'
+        })
+      })
+    },
+      uncheck(id) {
+   this.$confirm('是否确认反审核?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.getData()
+        reverseReview(id)
+         this.getData()
+        this.$message({
+          type: 'success',
+          message: '反审核成功!'
+        })
+        this.getData()
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消反审核'
+        })
+      })
+    }
 
   }
 };
