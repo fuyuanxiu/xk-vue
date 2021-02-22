@@ -274,6 +274,12 @@ export const asyncRouterMap = [
       component: () => import('@/views/settings/excelSplit'),
       name:'excelSplit',
       meta: { title: 'Excel导出', icon:'table' }
+    },
+    {
+      path:'projectManage',
+      component: () => import('@/views/settings/projectManage'),
+      name:'projectManage',
+      meta: { title: '报价-项目', icon:'table' }
     }
     ]
   },
