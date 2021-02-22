@@ -118,11 +118,11 @@
             label-width="120px"
             label-position="right"         
           >
-           <el-form-item label="类别ID:" style="" prop="bsCateId"  label-position="right" >
-                <el-input v-model="keywordForm.bsCateId" style="width:250px;" :disabled="true"></el-input>
+           <el-form-item label="类别ID:" style="" prop="parentId"  label-position="right" >
+                <el-input v-model="keywordForm.parentId" style="width:250px;" :disabled="true"></el-input>
             </el-form-item>             
-             <el-form-item label="子项目名称:" prop="bsName">
-                <el-input v-model="keywordForm.bsName" style="width:250px;"></el-input>
+             <el-form-item label="子项目名称:" prop="childName">
+                <el-input v-model="keywordForm.childName" style="width:250px;"></el-input>
             </el-form-item>                 
           </el-form>
           <div
@@ -156,7 +156,7 @@
 <script>
 import { getProjectlist,addCategoryKey,edit,delKeyword } 
 from '@/api/projectManage'
-import {getlist} from '@/api/childProject'
+import {getlist,add,editChild} from '@/api/childProject'
 import {getPermByRouterCode} from '@/api/perm'
 import messagebox from "@/components/Dialog/MessageBox.vue";
 export default {
@@ -183,20 +183,18 @@ export default {
       matchForm:{},
       keywordForm:{
         id:'',
+        parentId:'',
         prName:''
       },
       dialog: {        
         keywordVisible: false,
         keyruleForm: {        
-          bsCateId: [
+          parentId: [
             { required: true, message: "类别ID必填", trigger: "blur" }
           ],
-          bsCateName: [
-            { required: true, message: "类别名称", trigger: "blur" }
-          ],
-           bsValue: [
-            { required: true, message: "匹配值", trigger: "blur" }
-          ],    
+          childName: [
+            { required: false, message: "子项目名称", trigger: "blur" }
+          ]    
         }
       }, 
        // el-tag类型转换
@@ -232,9 +230,6 @@ export default {
     this.getPermit(); 
   },
   methods:{ 
-    handleSubmit(name){
-        this.getKeywordList();
-    },    
     getPermit(){
       var routerCode = this.$route.name;
       console.log(routerCode)
@@ -271,7 +266,7 @@ export default {
      handleSelectionChange(val) {       
         this.keywordForm=Object.assign({});
         this.selection = val!=null ? val : Object.assign({});
-        this.keywordForm.id=this.selection.id;
+        this.keywordForm.parentId=this.selection.id;
         this.keywordForm.prName=this.selection.prName;
         this.getKeywordList();     
     },
@@ -295,7 +290,7 @@ export default {
     getCategoryData(){         
         getProjectlist().then(response => {
             if (!response.data) { 
-            reject('error')
+           this.$message.error('获取类别列表失败!');
           }            
         this.matchTable = response.data
         })   
@@ -305,7 +300,7 @@ export default {
     let filter=Object.assign({},{parentId:this.selection.id, rows:this.queryParams.rows,page:this.queryParams.page})      
         getlist(filter).then(response => {
             if (!response.data) { 
-            reject('error')
+            this.$message.error('获取匹配关键字列表失败!');
           }            
         this.keywordTable = response.data.rows;
         this.totalCount =response.data.total;
@@ -329,12 +324,8 @@ export default {
         this.dialog.keywordVisible=true;
         const newRow = {
           id:'',
-          bsCateId:this.keywordForm.bsCateId,
-          bsCateName:this.keywordForm.bsCateName, 
-          bsName:'',
-          bsOrderNumber:'',
-          bsRemark:'',
-          bsValue:1
+          parentId:this.keywordForm.parentId,
+          childName:this.keywordForm.childName
         }
         this.keywordForm = Object.assign(newRow);   
         // this.keywordForm.id='';
@@ -353,7 +344,10 @@ export default {
                         edit(filter).then(response => {                                            
                         if(response.result) {                                
                                 this.keywordsDialogVisible= false
-                                 this.$message.info(response.msg);
+                                 this.$message({
+                                   message:response.msg,
+                                   type:'success'
+                                 })
                                 this.getCategoryData();
                             }else {
                                 this.$message.error(response.msg);
@@ -368,6 +362,10 @@ export default {
                         addCategoryKey(filter).then(response => {                     
                             if(response.result) {                       
                                 this.keywordsDialogVisible=false;
+                                this.$message({
+                                  message:response.msg,
+                                  type:'success'
+                                })
                                 this.getCategoryData();
                             }else {
                                 this.$message.error(response.msg);
@@ -405,10 +403,13 @@ export default {
             this.$refs['dialog.keyruleForm'].validate((valid) => {
                 if (valid) {
                    /* this.dialog.loading = true;*/
-                    edit(filter).then(response => {                                   
+                    editChild(filter).then(response => {                                   
                     if(response.result) {                                
                             this.dialog.keywordVisible= false
-                             this.$message.success(response.msg);
+                                 this.$message({
+                                  message:response.msg,
+                                  type:'success'
+                                })                           
                             this.getKeywordList();
                         }else {
                             this.$message.error(response.msg);
@@ -422,6 +423,10 @@ export default {
                     add(filter).then(response => {                     
                         if(response.result) {                       
                             this.dialog.keywordVisible=false;
+                                this.$message({
+                                  message:response.msg,
+                                  type:'success'
+                                })                           
                             this.getKeywordList();
                         }else {
                             this.$message.error(response.msg);

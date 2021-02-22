@@ -6,3 +6,20 @@ export function getlist(data) {
       params:data
     })
   }
+  /*新增子项目*/
+
+export function add(data){
+  return request({
+    url:'/child/add',
+    method:'post',
+    params:data
+  })
+}
+
+export function editChild(data){
+  return request({
+    url:'/child/edit',
+    method:'post',
+    params:data
+  })
+}
