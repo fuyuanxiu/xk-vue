@@ -156,7 +156,7 @@
 <script>
 import { getProjectlist,addCategoryKey,edit,delKeyword } 
 from '@/api/projectManage'
-import {getlist,add,editChild} from '@/api/childProject'
+import {getlist,add,editChild,del} from '@/api/childProject'
 import {getPermByRouterCode} from '@/api/perm'
 import messagebox from "@/components/Dialog/MessageBox.vue";
 export default {

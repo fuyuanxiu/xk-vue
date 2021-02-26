@@ -88,11 +88,15 @@
     <el-table :data="iTable" class="market-table">
       <el-table-column type="index" label="序号" width="50" show-overflow-tooltip/>
       <el-table-column prop="bsMachine" label="机型" show-overflow-tooltip width="80">
-        <template scope="scope">
+        <!--<template scope="scope">
           <span>{{ scope.row.marketReport ? scope.row.marketReport.bsMachine : "" }}</span>
-        </template>
+        </template> -->
       </el-table-column>
-      <el-table-column prop="bsProject" label="项目" width="100" show-overflow-tooltip/>
+      <el-table-column prop="bsProject" label="项目" width="100" show-overflow-tooltip>
+      <template scope="scope">
+          <span>{{ scope.row.prName ? scope.row.prName:scope.row.bsProject }}</span>
+        </template>
+        </el-table-column>
       <!-- <el-table-column prop="bsProcess" label="工序" width="120" show-overflow-tooltip>
         <template scope="scope">
           <span>{{ getProcessName(scope.row) ? getProcessName(scope.row) : "" }}</span>
@@ -723,7 +727,7 @@ export default {
     getFeeName(row) {
       var feeName = ''
       if (row.bsType == 1) {
-        feeName = row.fee ? row.fee.bsName : ''
+        feeName = row.bsFee ? row.bsFee : ''
       } else {
         feeName = 'SMD'
       }

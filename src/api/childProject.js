@@ -23,3 +23,11 @@ export function editChild(data){
     params:data
   })
 }
+
+export function del(id) {
+  return request({
+    url: '/child/delete',
+    method: 'post',
+    params: { 'id':id}
+  })
+}
