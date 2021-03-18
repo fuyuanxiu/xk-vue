@@ -108,7 +108,22 @@
         </template>
       </el-table-column>
 
-      <el-table-column prop="bsQty" label="数量" width="101" show-overflow-tooltip>
+      <el-table-column prop="number" label="参考数量" width="101" show-overflow-tooltip>
+        <template scope="scope">
+          <el-input-number
+            :precision="2"
+            :controls="false"
+            v-model="scope.row.number"
+            :disabled="true"
+            clearable
+            align="left"
+            width="80"
+          />
+          
+            <!-- @keyup.enter.native="getValue(scope.row)"  -->
+        </template>
+      </el-table-column>
+         <el-table-column prop="bsQty" label="实际数量" width="101" show-overflow-tooltip>
         <template scope="scope">
           <el-input-number
             :precision="2"
@@ -120,9 +135,11 @@
             width="80"
             @keyup.enter.native="getValue(scope.row)"
           />
+         
+            
         </template>
       </el-table-column>
-      <el-table-column prop="bsUnit" label="单位" min-width="150" show-overflow-tooltip/>
+      <el-table-column prop="bsUnit" label="单位" min-width="100" show-overflow-tooltip/>
       <el-table-column label="订单50K" align="center">
         <el-table-column prop="price1" label="单价1" width="101" show-overflow-tooltip>
           <template scope="scope" >

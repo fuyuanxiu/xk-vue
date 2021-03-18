@@ -63,7 +63,7 @@
 </el-container>
 <!--  新增物料 -->
         <el-dialog
-          title="新增类别"
+          title="新增(编辑)类别"
           :visible.sync="keywordsDialogVisible"
           width="35%"
         >
@@ -105,7 +105,7 @@
         </el-dialog> 
  <!--  新增匹配关键字 -->
         <el-dialog
-          title="新增子项目"
+          title="新增(编辑)子项目"
           :visible.sync="dialog.keywordVisible"
           width="500px"
         >
@@ -236,21 +236,15 @@ export default {
       getPermByRouterCode(routerCode).then(response => {
         if(response.result){
           if(response.data == "admin"){
-            this.permit.SEARCH = true;
             this.permit.ADD = true;
             this.permit.EDIT = true;
             this.permit.DELETE = true;
-            this.permit.CHECK= true;
-            this.permit.UNCHECK=true;
           }else{
             var list = response.data;
             for(var i = 0; i < list.length; i++){
-              if(list[i].permCode == "SEARCH") this.permit.SEARCH = true;
               if(list[i].permCode == "ADD") this.permit.ADD = true;
               if(list[i].permCode == "EDIT") this.permit.EDIT = true;
               if(list[i].permCode == "DELETE") this.permit.DELETE = true;
-              if(list[i].permCode == "CHECK") this.permit.CHECK = true;
-              if(list[i].permCode == "UNCHECK") this.permit.UNCHECK=true;
             }
           }
         }else{

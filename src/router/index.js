@@ -184,6 +184,12 @@ export const asyncRouterMap = [
         name: 'permRoleResource',
         hidden: true,
         meta: { title: '操作权限设置', icon: 'user' }
+      },
+      {
+        path: 'operateLog',
+        component: () => import('@/views/system/operateLog'),
+        name: 'operateLog',
+        meta: { title: '操作日志', icon: 'documentation' }
       }
     ]
   },

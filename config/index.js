@@ -12,7 +12,7 @@ module.exports = {
     proxyTable: {
       '/api': {
       target: 'http://localhost:9999/',
-      //target: 'http://113.106.72.75:9345/logistics/',
+      // target: 'http://113.106.72.75:9345/logistics/',
         //target: 'http://192.168.1.160:9345/xk_logistics/',
       // target: 'http://192.168.1.239:9999/logistics/',
       changeOrigin: true,
@@ -27,7 +27,7 @@ module.exports = {
     // can be overwritten by process.env.HOST
     // if you want dev by ip, please set host: '0.0.0.0'
     host: 'localhost',
-    //host: '113.106.72.75',
+    // host: '113.106.72.75',
     port: 9527, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
