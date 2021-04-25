@@ -435,6 +435,12 @@ export const asyncRouterMap = [
       name:'enquiryOrderDetail2',
       hidden: true,
       meta: {icon:'cost', title: '清单已询价详情'}
+    },
+    {
+      path:'purchaseOrder',
+      component: () => import('@/views/enquiryOrder/purchaseOrder'),
+      name:'purchaseOrder',
+      meta: {icon:'cost', title: '采购订单'}
     }
     ]
   },
@@ -479,6 +485,12 @@ export const asyncRouterMap = [
         name:'quoMateDetail',hidden: true,
         meta: {icon: 'icon', title: '报价明细'}
     },
+    {
+      path:'deliveryOrder',
+      component: () => import('@/views/quo/deliveryOrder'),
+      name:'deliveryOrder',
+      meta: {icon: 'icon', title: '交付订单'}
+  }
     ]
   },
   // //BOM-询价管理
