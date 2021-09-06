@@ -499,6 +499,31 @@ export const asyncRouterMap = [
     }
     ]
   },
+
+  // 报表管理
+  {
+    path: '/reportManage',
+    component: Layout,
+    redirect: '/reportManage',
+    name: 'reportManage',
+    meta: {
+      title: '报表管理',
+      icon: 'menu_supplier'
+    },
+    children: [{
+      path: 'quoRecord',
+      component: () => import('@/views/report/quoRecord'),
+      name: 'quoRecord',
+      meta: { icon: 'icon', title: '报价汇总表' }
+    },
+    {
+      path: 'quoRecord',
+      component: () => import('@/views/report/quoRecord'),
+      name: 'quoRecord',
+      meta: { icon: 'icon', title: '报价汇总表' }
+    }
+    ]
+  },
   // //BOM-询价管理
   // {
   //   path: '/enquiryBom',

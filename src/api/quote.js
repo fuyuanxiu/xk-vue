@@ -64,6 +64,15 @@ export function addMateByNum(data) {
   })
 }
 
+/*获取报价列表*/
+export function getMaterialQuoList(keyword,startDate,endDate,rows,page) {
+  return request({
+    url: '/quoteMateriel/getquoteMaterial',
+    method: 'get',
+    params: {'keyword':keyword,'startDate':startDate,'endDate':endDate,'page':page,'rows':rows}
+  })
+}
+
 /*编辑报价*/
 export function editMate(data) {
   return request({

@@ -563,7 +563,7 @@ export default {
     getSuppData() {
       this.dialog.suppVisible = true;
       this.suppSelectedList = [];
-      let filter=Object.assign({},this.suppParams,{keyword:this.dialog.keyword});
+      let filter=Object.assign({},this.suppParams,{suppGrade:2},{keyword:this.dialog.keyword});
       getSupplierList(filter).then(response => {
         if (response.result) {          
           this.suppAllList = response.data.rows;
